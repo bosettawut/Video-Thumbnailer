@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: extract
+spec:
+  selector:
+    app: extract
+  type:  ClusterIP
+  ports:
+    - name:  http
+      port:  80
+      targetPort:  5000

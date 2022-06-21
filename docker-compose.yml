@@ -1,0 +1,46 @@
+version: "3.7"
+services:
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    container_name: minio
+    hostname: minio-name
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      # MINIO_ACCESS_KEY: minio
+      # MINIO_SECRET_KEY: minio123
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    healthcheck:
+      test: ["CMD","curl","-f","http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+  flask_app:
+    image: flask-image
+    build: './flask_app'
+    entrypoint: ["gunicorn", "-b 0.0.0.0:5000", "-w 2", "app:app"]
+    environment:
+      - REDIS_URL=redis
+      - REDIS_PORT=6379
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+      - minio
+
+  redis:
+    image: 'redis:4-alpine'
+    ports:
+      - '6379:6379'
+  worker:
+    image: flask-image:latest
+    depends_on:
+      - redis
+    command: rq worker --url redis://redis:6379
+    links:
+      - redis

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: p2-backend
+  labels:
+    app: p2-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: p2-backend
+  template:
+    metadata:
+      labels:
+        app: p2-backend
+    spec:
+      containers:
+        - name: p2-backend
+          image: ghcr.io/cs-muic/scalable-p2-scalable-t3-katukjit-kachakjai/scalable-p2:latest
+          imagePullPolicy: Always
+          env:
+            - name: REDIS_URL
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: MONGODB_HOST
+              value: mongodb
+            - name: MONGODB_PORT
+              value: "27017"
+      imagePullSecrets:
+        - name: myregistrykey

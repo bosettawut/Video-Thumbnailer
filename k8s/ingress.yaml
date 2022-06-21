@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: p2-deployment-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /get_all_buckets
+            pathType: Exact
+            backend:
+              service:
+                name: p2-backend
+                port:
+                  number: 80
+          - path: /list_videos
+            pathType: Exact
+            backend:
+              service:
+                name: p2-backend
+                port:
+                  number: 80
+          - path: /list_gifs
+            pathType: Exact
+            backend:
+              service:
+                name: p2-backend
+                port:
+                  number: 80
+          - path: /make_gif
+            pathType: Exact
+            backend:
+              service:
+                name: p2-backend
+                port:
+                  number: 80
+          - path: /make_all_gif
+            pathType: Exact
+            backend:
+              service:
+                name: p2-backend
+                port:
+                  number: 80
+          - path: /get_status
+            pathType: Exact
+            backend:
+              service:
+                name: p2-backend
+                port:
+                  number: 80
+          - path: /delete_gif
+            pathType: Exact
+            backend:
+              service:
+                name: p2-backend
+                port:
+                  number: 80
